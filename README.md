@@ -39,6 +39,22 @@ $ mvn spring-boot:build-image
 此外，在启动4个POS服务器时，出现了500错误，这个错误的原因应该是频繁地请求资源导致京东的服务器切断了链接。
 改为手动依次启动4个服务器即可避免触发阈值。
 
+## 3. Redis集群
+
+使用Docker运行6个redis节点构成集群（3个主节点，每个主节点有1个复制集），并配置spring使用redis集群存储session。
+运行后同一用户通过负载均衡访问服务，无论分配到哪一个服务器都能获得相同的数据。
+
+使用redis后对系统进行压力测试，得到如下结果：
+
+![](./assets/gatling-3-500.png)
+
+![](./assets/gatling-3-2000.png)
+
+从截图中可以看出，500用户时的性能大幅度下降，与不使用redis时的2000用户接近；
+而2000用户时>95%的请求无法处理，经过查询日志发现是redis请求超时，导致大量的错误和请求积压。
+从性能测试结果来看，该redis集群的配置不能够满足2000用户同时高并发的访问要求；
+这可能是因为redis集群的数量不足，也可能是运行的6个Redis节点+4个spring服务+HAProxy已经超出了我手上这个丐中丐版M1 CPU的处理能力。
+
 > # WebPOS
 >
 > The demo shows a web POS system , which replaces the in-memory product db in aw03 with a one backed by 京东.
