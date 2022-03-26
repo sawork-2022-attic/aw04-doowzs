@@ -1,9 +1,37 @@
 version: "3"
 
 services:
-  pos:
+  haproxy:
+    image: bitnami/haproxy:2
+    volumes:
+      - ./haproxy.cfg:/bitnami/haproxy/conf/haproxy.cfg:ro
+    ports:
+      - "8080:8080"
+    depends_on:
+      - pos1
+      - pos2
+      - pos3
+      - pos4
+
+  pos1:
+    image: pos
     build:
       context: ./
     cpu_count: 1
     ports:
-      - "8080:8080"
+      - "8081:8080"
+  pos2:
+    image: pos
+    cpu_count: 1
+    ports:
+      - "8082:8080"
+  pos3:
+    image: pos
+    cpu_count: 1
+    ports:
+      - "8083:8080"
+  pos4:
+    image: pos
+    cpu_count: 1
+    ports:
+      - "8084:8080"

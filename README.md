@@ -24,6 +24,21 @@ $ mvn spring-boot:build-image
 
 可以看出2000用户访问时，POS服务器压力大，返回消息的延迟非常大。
 
+## 2. HAProxy横向扩展
+
+使用4个POS服务器，并使用HAProxy镜像做负载均衡，采用轮询（roundrobin）方式平衡负载，运行相同的测试得到如下结果：
+
+![](./assets/gatling-2-500.png)
+
+![](./assets/gatling-2-2000.png)
+
+从结果中可以看出，500用户时，有大概7%左右的请求的延迟增大，但总体来看性能很好，猜测这个差异可能是由于HAProxy的配置和额外开销导致的。
+而2000用户同时访问时，延迟超过1200ms的请求数量从>95%降低到了70%左右，可以看出添加负载均衡提高了处理高密度请求的能力。
+如果仔细地调整HAProxy的配置，应该可以获得更好的性能。
+
+此外，在启动4个POS服务器时，出现了500错误，这个错误的原因应该是频繁地请求资源导致京东的服务器切断了链接。
+改为手动依次启动4个服务器即可避免触发阈值。
+
 > # WebPOS
 >
 > The demo shows a web POS system , which replaces the in-memory product db in aw03 with a one backed by 京东.
