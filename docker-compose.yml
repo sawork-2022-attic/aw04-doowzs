@@ -13,6 +13,53 @@ services:
       - pos3
       - pos4
 
+  redis1:
+    image: bitnami/redis-cluster:6.2
+    environment:
+      - "ALLOW_EMPTY_PASSWORD=yes"
+      - "REDIS_CLUSTER_REPLICAS=1"
+      - "REDIS_NODES=redis1 redis2 redis3 redis4 redis5 redis6"
+  redis2:
+    image: bitnami/redis-cluster:6.2
+    environment:
+      - "ALLOW_EMPTY_PASSWORD=yes"
+      - "REDIS_CLUSTER_REPLICAS=1"
+      - "REDIS_NODES=redis1 redis2 redis3 redis4 redis5 redis6"
+  redis3:
+    image: bitnami/redis-cluster:6.2
+    environment:
+      - "ALLOW_EMPTY_PASSWORD=yes"
+      - "REDIS_CLUSTER_REPLICAS=1"
+      - "REDIS_NODES=redis1 redis2 redis3 redis4 redis5 redis6"
+  redis4:
+    image: bitnami/redis-cluster:6.2
+    environment:
+      - "ALLOW_EMPTY_PASSWORD=yes"
+      - "REDIS_CLUSTER_REPLICAS=1"
+      - "REDIS_NODES=redis1 redis2 redis3 redis4 redis5 redis6"
+  redis5:
+    image: bitnami/redis-cluster:6.2
+    environment:
+      - "ALLOW_EMPTY_PASSWORD=yes"
+      - "REDIS_CLUSTER_REPLICAS=1"
+      - "REDIS_NODES=redis1 redis2 redis3 redis4 redis5 redis6"
+  redis6:
+    image: bitnami/redis-cluster:6.2
+    environment:
+      - "ALLOW_EMPTY_PASSWORD=yes"
+      - "REDIS_CLUSTER_REPLICAS=1"
+      - "REDIS_NODES=redis1 redis2 redis3 redis4 redis5 redis6"
+      - "REDIS_CLUSTER_CREATOR=yes"
+      - "REDIS_CLUSTER_SLEEP_BEFORE_DNS_LOOKUP=15"
+    ports:
+      - "6379:6379"
+    depends_on:
+      - redis1
+      - redis2
+      - redis3
+      - redis4
+      - redis5
+
   pos1:
     image: pos
     build:
